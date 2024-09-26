@@ -10,6 +10,11 @@ public class SessionDto {
     @Size(min = 2, message = "El Nombre debe tener almenos 2 caracteres")
     private String name;
 
+    @NotNull(message ="Ingrese una descripcion a la Session de Trabajo" )
+
+    private String description;
+
+
     @NotNull(message = "Ingrese el creador de esta Session")
     private Long idHost;
 }

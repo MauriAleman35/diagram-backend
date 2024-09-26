@@ -1,4 +1,4 @@
-package Security;
+package com.DiagramParcialBackend.Security;
 
 import com.DiagramParcialBackend.Services.Security.JwtService;
 import jakarta.servlet.FilterChain;

@@ -1,4 +1,4 @@
-package Utils;
+package com.DiagramParcialBackend.Utils;
 
 public enum Status {
     PENDING,

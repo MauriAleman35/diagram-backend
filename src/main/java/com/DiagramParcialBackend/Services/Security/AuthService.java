@@ -1,6 +1,6 @@
 package com.DiagramParcialBackend.Services.Security;
 
-import Security.SecurityUser;
+import com.DiagramParcialBackend.Security.SecurityUser;
 import com.DiagramParcialBackend.Dto.LoginDto;
 import com.DiagramParcialBackend.Repository.UserRepository;
 import com.DiagramParcialBackend.Response.AuthResponse;

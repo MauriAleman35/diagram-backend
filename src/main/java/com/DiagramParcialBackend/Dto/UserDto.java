@@ -1,6 +1,6 @@
 package com.DiagramParcialBackend.Dto;
 
-import Utils.Role;
+import com.DiagramParcialBackend.Utils.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -19,6 +19,5 @@ public class UserDto {
     @NotNull(message = "Introduzca una contraseña")
     private String password;
 
-    @NotNull(message = "Ingrese un rol")
-    private Role role;
+
 }

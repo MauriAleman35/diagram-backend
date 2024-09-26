@@ -1,14 +1,11 @@
 package com.DiagramParcialBackend.Entity;
 
-import Utils.JsonConverter;
+import com.DiagramParcialBackend.Utils.JsonConverter;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import org.hibernate.annotations.Type;
-
 
 
 import java.util.Map;

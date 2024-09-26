@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Set;
 
@@ -29,11 +30,14 @@ public class Session {
     private String name;
 
     @Column(
-            name = "created_at",
-            nullable = false,
-            updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+            name = "description",
+            length = 150,
+            nullable = false
     )
+    private String description;
+
+    @CreationTimestamp // Esta anotación maneja la fecha de creación automáticamente
+    @Column(name = "created_at", nullable = false, updatable = false)
     private java.sql.Timestamp createdAt;
 
     @OneToMany(mappedBy = "session")
@@ -41,8 +45,10 @@ public class Session {
 
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Diagram> diagrams;
-    public Session(String name){
+    public Session(String name, String description){
+        super();
         this.name=name;
+        this.description=description;
 
     }
 }

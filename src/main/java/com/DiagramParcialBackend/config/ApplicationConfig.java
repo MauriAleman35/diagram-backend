@@ -1,6 +1,6 @@
 package com.DiagramParcialBackend.config;
 
-import Security.SecurityUser;
+import com.DiagramParcialBackend.Security.SecurityUser;
 import com.DiagramParcialBackend.Repository.UserRepository;
 
 import org.springframework.context.annotation.Bean;

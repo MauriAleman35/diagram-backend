@@ -1,4 +1,4 @@
-package Security;
+package com.DiagramParcialBackend.Security;
 
 import com.DiagramParcialBackend.Repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,11 +1,11 @@
 package com.DiagramParcialBackend.Services;
 
-import Utils.Role;
 import com.DiagramParcialBackend.Dto.UserDto;
 import com.DiagramParcialBackend.Entity.Users;
 import com.DiagramParcialBackend.Repository.UserRepository;
 import com.DiagramParcialBackend.errors.excepciones.BadRequestException;
 import com.DiagramParcialBackend.errors.excepciones.NotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,27 +17,34 @@ import org.springframework.stereotype.Service;
 public class UserService {
     @Autowired
     UserRepository userRepository;
+    @Transactional
+    public Users createUser(UserDto userDto) {
+        // Verificar si el usuario ya existe
+        var usersPresent = userRepository.findByEmail(userDto.getEmail());
 
-    public Users createUser(UserDto userDto){
-        var usersPresent=userRepository.findByEmail(userDto.getEmail());
-        System.out.println(usersPresent);
-        if (usersPresent.isPresent()){
+        if (usersPresent.isPresent()) {
             throw new BadRequestException(
-                    "El usuario con Email"+ usersPresent.get().getEmail()+"se encuentra en el sistema"
+                    "El usuario con el Email " + usersPresent.get().getEmail() + " ya se encuentra en el sistema"
             );
         }
-        try{
-            var passwordEncrypt=new BCryptPasswordEncoder().encode(userDto.getPassword());
-            var userNew=new Users(
+
+        try {
+            // Cifrar la contraseña
+            var passwordEncrypt = new BCryptPasswordEncoder().encode(userDto.getPassword());
+
+            // Crear el nuevo usuario
+            var userNew = new Users(
                     userDto.getEmail(),
                     userDto.getName(),
-                    passwordEncrypt,
-                    userDto.getRole()
+                    passwordEncrypt
             );
-            userRepository.save(userNew);
-            return userNew;
-        }catch (IllegalArgumentException e){
-            throw new NotFoundException("Usuario not found");
+
+            // Guardar el usuario en la base de datos
+            return userRepository.save(userNew);
+
+        } catch (Exception e) {
+            System.err.println("Error al crear el usuario: " + e.getMessage());
+            throw new RuntimeException("Ocurrió un error al crear el usuario: " + e.getMessage());
         }
     }
 
@@ -52,7 +59,7 @@ public class UserService {
         return userRepository.findById(id).map(user -> {
             user.setName(userDto.getName());
             user.setEmail(userDto.getEmail());
-            user.setRole(userDto.getRole());
+
             return userRepository.save(user);
         }).orElseThrow(() -> new NotFoundException("Usuario no encontrado con id " + id));
     }

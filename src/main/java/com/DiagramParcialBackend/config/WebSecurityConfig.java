@@ -1,6 +1,6 @@
 package com.DiagramParcialBackend.config;
 
-import Security.JwtRequestFilter;
+import com.DiagramParcialBackend.Security.JwtRequestFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,40 +12,39 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
+@AllArgsConstructor // Lombok genera el constructor con todos los argumentos
 public class WebSecurityConfig {
-    private AuthenticationProvider authenticationProvider;
-    private JwtRequestFilter jwtRequestFilter;
+
+    private final AuthenticationProvider authenticationProvider;
+    private final JwtRequestFilter jwtRequestFilter;
+
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-
+                .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para APIs REST
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(
-                                "/registro**",
-                                "/js/**",
-                                "/css/**",
-                                "/img/**")
-
-                        .permitAll()
-                        .requestMatchers(HttpMethod.GET).permitAll()
-                        .requestMatchers(HttpMethod.POST).permitAll()
-                        .requestMatchers(HttpMethod.DELETE).permitAll()
-                        .requestMatchers(HttpMethod.PUT).permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS).permitAll()
-
-
-                        //     .requestMatchers("/grupo/**").hasAnyAuthority(RoleName.ADMIN.name())
-                        .requestMatchers("/auth/**").permitAll()
-
+                        .requestMatchers("/auth/**", "/registro**", "/js/**", "/css/**", "/img/**","/user/**").permitAll() // Permitir acceso sin autenticación
+                        .requestMatchers("/session/**").authenticated() // Requiere autenticación para estas rutas
+                        .requestMatchers("/user-session/**").authenticated()
+                        //Modificar esta configuracion
+                     // Cualquier otra solicitud requiere autenticación
                 )
-                .sessionManagement(sessionManager -> sessionManager
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No manejar sesiones, usar JWT
+                )
+                .authenticationProvider(authenticationProvider) // Proveedor de autenticación personalizado
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class) // Filtro JWT antes del filtro de autenticación predeterminado
                 .build();
     }
 }
