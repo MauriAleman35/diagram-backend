@@ -40,4 +40,13 @@ public class UserController {
         Users users=this.userService.getUserById(id);
         return users;
     }
+
+    @GetMapping("/byEmail")
+    public ApiResponse<UserResponse> getByEmail(@RequestParam String email){
+        return new ApiResponse<>(
+                HttpStatus.OK.value(),
+                "Usuario Encontrado",
+                new UserResponse(this.userService.UserByEmail(email))
+        );
+    }
 }

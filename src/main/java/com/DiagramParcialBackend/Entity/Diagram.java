@@ -1,11 +1,15 @@
 package com.DiagramParcialBackend.Entity;
 
 import com.DiagramParcialBackend.Utils.JsonConverter;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
 
 
 import java.util.Map;
@@ -24,26 +28,15 @@ public class Diagram {
     private Long Id;
 
 
-    @Column(
-            name = "name",
-            length = 70,
-            nullable = false
-    )
-    private String name;
 
-    @Column(
-            name = "created_at",
-            nullable = false,
-            updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
-    )
+    @CreationTimestamp // Esta anotación maneja la fecha de creación automáticamente
+    @Column(name = "created_at", nullable = false, updatable = false)
     private java.sql.Timestamp createdAt;
 
 
-    @Convert(converter = JsonConverter.class)
+    @Type(JsonType.class)
     @Column(name = "data", columnDefinition = "jsonb")
     private Map<String, Object> data;
-
 
     // Relación muchos a uno con Session
     @ManyToOne

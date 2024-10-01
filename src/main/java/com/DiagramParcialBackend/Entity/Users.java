@@ -46,8 +46,8 @@ public class Users {
     @OneToMany(mappedBy = "user")
     private Set<UserSession> userSessions;
 
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Lock> lock;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Lock> lock; // Debe ser "user" en lugar de "users"
     public Users(String email,String name,String password){
         super();
         this.email=email;
