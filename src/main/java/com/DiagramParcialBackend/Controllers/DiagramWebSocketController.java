@@ -1,37 +1,24 @@
 package com.DiagramParcialBackend.Controllers;
 
-import com.DiagramParcialBackend.Dto.DiagramMessage;
-import com.DiagramParcialBackend.Dto.LockMessage;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-
-import java.util.Map;
 
 @Controller
 public class DiagramWebSocketController {
 
-    // Cuando se recibe un mensaje para actualizar el diagrama
-    @MessageMapping("/updateDiagram")
-    @SendTo("/topic/diagrams/{sessionId}")
-    public Map<String, Object> updateDiagram(DiagramMessage message) {
-        // Notificar a todos los usuarios sobre el nuevo estado del diagrama
-        return message.getData();
+    private final SimpMessagingTemplate messagingTemplate;
+
+    public DiagramWebSocketController(SimpMessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
     }
 
-    // Cuando un usuario bloquea una entidad
-    @MessageMapping("/lockEntity")
-    @SendTo("/topic/lockStatus/{sessionId}")
-    public LockMessage lockEntity(LockMessage lockMessage) {
-        // Notificar a todos que una entidad está bloqueada
-        return lockMessage;
-    }
-
-    // Cuando un usuario libera una entidad
-    @MessageMapping("/unlockEntity")
-    @SendTo("/topic/lockStatus/{sessionId}")
-    public LockMessage unlockEntity(LockMessage lockMessage) {
-        // Notificar a todos que una entidad fue liberada
-        return lockMessage;
+    // Escucha los mensajes enviados desde el frontend a /app/updateDiagram
+    @MessageMapping("/updateDiagram/{sessionId}")
+    public void updateDiagram(String diagramJson, @DestinationVariable String sessionId) {
+        // Enviar el diagrama actualizado a todos los suscriptores de esta sesión
+        messagingTemplate.convertAndSend("/topic/diagrams/" + sessionId, diagramJson);
     }
 }
