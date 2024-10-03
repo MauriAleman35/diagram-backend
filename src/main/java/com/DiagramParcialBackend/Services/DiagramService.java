@@ -14,10 +14,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -110,29 +107,35 @@ public class DiagramService {
                 List<Map<String, Object>> nodeDataArray = (List<Map<String, Object>>) innerData.get("nodeDataArray");
 
                 for (Map<String, Object> nodeData : nodeDataArray) {
-                    String className = (String) nodeData.get("name");
-                    List<Map<String, String>> attributes = (List<Map<String, String>>) nodeData.get("attributes");
+                    String className = (String) nodeData.get("name"); // Nombre de la clase
 
-                    // Generar el contenido de la clase Java
-                    StringBuilder classContent = new StringBuilder();
-                    classContent.append("import javax.persistence.*;\n");
-                    classContent.append("@Entity\n");
-                    classContent.append("public class ").append(className).append(" {\n");
+                    // Asegurarse de que "attributes" sea una lista de mapas
+                    if (nodeData.containsKey("attributes") && nodeData.get("attributes") instanceof List) {
+                        List<Map<String, Object>> rawAttributes = (List<Map<String, Object>>) nodeData.get("attributes");
+                        List<Map<String, String>> attributes = new ArrayList<>();
 
-                    for (Map<String, String> attribute : attributes) {
-                        classContent.append("  private ").append(attribute.get("type"))
-                                .append(" ").append(attribute.get("name")).append(";\n");
+                        // Convertir cada atributo al formato de Map<String, String>
+                        for (Map<String, Object> rawAttribute : rawAttributes) {
+                            Map<String, String> attribute = new HashMap<>();
+                            attribute.put("name", rawAttribute.get("name").toString());
+                            attribute.put("type", rawAttribute.get("type").toString());
+
+                            attributes.add(attribute);
+                        }
+
+                        // Generar el contenido de la clase Java con anotaciones
+                        String classContent = generateClassContent(className, attributes);
+
+                        // Escribir el archivo .java
+                        File javaFile = new File(className + ".java");
+                        try (FileWriter writer = new FileWriter(javaFile)) {
+                            writer.write(classContent);
+                        }
+
+                        javaFiles.add(javaFile);
+                    } else {
+                        throw new IllegalArgumentException("El nodo no contiene 'attributes' o no es una lista.");
                     }
-
-                    classContent.append("}\n");
-
-                    // Escribir el archivo .java
-                    File javaFile = new File(className + ".java");
-                    try (FileWriter writer = new FileWriter(javaFile)) {
-                        writer.write(classContent.toString());
-                    }
-
-                    javaFiles.add(javaFile);
                 }
             } else {
                 throw new IllegalArgumentException("El JSON no contiene nodeDataArray o es null.");
@@ -143,6 +146,82 @@ public class DiagramService {
 
         return javaFiles;
     }
+
+
+    private String generateClassContent(String className, List<Map<String, String>> attributes) {
+        StringBuilder classContent = new StringBuilder();
+
+        // Agregar las anotaciones principales
+        classContent.append("import javax.persistence.*;\n")
+                .append("import lombok.*;\n\n")
+                .append("@Data\n")
+                .append("@ToString\n")
+                .append("@EqualsAndHashCode\n")
+                .append("@NoArgsConstructor\n")
+                .append("@Entity\n")
+                .append("@Table(name = \"").append(className).append("\", schema = \"public\")\n")
+                .append("public class ").append(className).append(" {\n\n");
+
+        // Añadir los atributos de la clase
+        for (Map<String, String> attribute : attributes) {
+            String attrName = attribute.get("name");
+            String attrType = attribute.get("type");
+
+            // Si el nombre del atributo contiene "id", agregar solo @Id y @GeneratedValue
+            if (attrName.toLowerCase().contains("id")) {
+                classContent.append("    @Id\n")
+                        .append("    @GeneratedValue(strategy = GenerationType.IDENTITY)\n")
+                        .append("    private ").append(mapToJavaType(attrType)).append(" ").append(attrName).append(";\n\n");
+            } else {
+                // Para otros atributos, agregar la anotación @Column
+                classContent.append("    @Column(name = \"").append(attrName).append("\", nullable = false)\n")
+                        .append("    private ").append(mapToJavaType(attrType)).append(" ").append(attrName).append(";\n\n");
+            }
+        }
+
+        // Constructor adicional si tiene más atributos además del ID
+        classContent.append("    public ").append(className).append("(");
+        StringJoiner constructorParams = new StringJoiner(", ");
+        StringJoiner constructorBody = new StringJoiner("\n");
+
+        for (Map<String, String> attribute : attributes) {
+            String attrName = attribute.get("name");
+            if (!attrName.toLowerCase().contains("id")) { // Excluir los ID del constructor
+                String attrType = attribute.get("type");
+
+                constructorParams.add(mapToJavaType(attrType) + " " + attrName);
+                constructorBody.add("        this." + attrName + " = " + attrName + ";");
+            }
+        }
+
+        classContent.append(constructorParams.toString()).append(") {\n")
+                .append("        super();\n")
+                .append(constructorBody.toString()).append("\n")
+                .append("    }\n");
+
+        // Cerrar la clase
+        classContent.append("}\n");
+
+        return classContent.toString();
+    }
+
+
+
+    private String mapToJavaType(String type) {
+        switch (type.toLowerCase()) {
+            case "int":
+                return "Integer";
+            case "varchar":
+                return "String";
+            case "boolean":
+                return "Boolean";
+            case "datetime":
+                return "LocalDateTime";
+            default:
+                return "String";  // Default a String si el tipo no está claro
+        }
+    }
+
 
 
 }
