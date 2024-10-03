@@ -11,5 +11,6 @@ import java.util.Map;
 @NoArgsConstructor
 public class DiagramMessage {
     private Long sessionId;
-    private Map<String, Object> data;
+    private Map<String, Object> data;  // Los datos que se están actualizando
+    private String type;  // El tipo de actualización (entidad, relación, posición, etc.)
 }
