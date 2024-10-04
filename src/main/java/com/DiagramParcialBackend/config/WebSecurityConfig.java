@@ -31,7 +31,7 @@ public class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/auth/**", "/registro**", "/js/**", "/css/**", "/img/**", "/user/**").permitAll()
+                        .requestMatchers("/auth/**", "/registro**", "/js/**", "/css/**", "/img/**", "/user/**","/test/**").permitAll()
                         .requestMatchers("/ws-diagram/**").permitAll()  // Permitir WebSocket sin autenticación
                         .requestMatchers("/session/**", "/user-session/**", "/diagram/**").authenticated()
                         .anyRequest().authenticated()
