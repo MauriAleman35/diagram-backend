@@ -48,8 +48,8 @@ public class WebSecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // Especificar los orígenes con sus puertos
-        configuration.addAllowedOrigin("http://localhost:5173"); // Frontend
-        configuration.addAllowedOrigin("https://ytterbic-kassie-mauricioaleman-98ee6074.koyeb.app"); // Backend, si haces peticiones desde ahí
+
+        configuration.addAllowedOrigin("*"); // Backend, si haces peticiones desde ahí
 
         // Permitir todos los métodos HTTP
         configuration.addAllowedMethod("*");
