@@ -49,7 +49,7 @@ public class WebSecurityConfig {
 
         // Especificar los orígenes con sus puertos
         configuration.addAllowedOrigin("http://localhost:5173"); // Frontend
-        configuration.addAllowedOrigin("http://localhost:3000"); // Backend, si haces peticiones desde ahí
+        configuration.addAllowedOrigin("https://ytterbic-kassie-mauricioaleman-98ee6074.koyeb.app"); // Backend, si haces peticiones desde ahí
 
         // Permitir todos los métodos HTTP
         configuration.addAllowedMethod("*");
