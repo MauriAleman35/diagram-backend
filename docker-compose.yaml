@@ -21,7 +21,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/Diagram
       SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: Mauri3524
+      SPRING_DATASOURCE_PASSWORD: 1234
     ports:
       - "8080:8080"
     depends_on:
