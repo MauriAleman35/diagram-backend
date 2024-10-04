@@ -10,9 +10,10 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173") // Permitir solo el origen del frontend
+                .allowedOrigins("https://ytterbic-kassie-mauricioaleman-98ee6074.koyeb.app") // Permitir Koyeb
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
-                .allowCredentials(true); // Permitir cookies si es necesario
+                .allowCredentials(true); // Permitir credenciales si es necesario
     }
+
 }
