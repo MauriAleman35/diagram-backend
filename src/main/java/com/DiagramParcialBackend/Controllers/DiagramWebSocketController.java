@@ -49,6 +49,12 @@ public class DiagramWebSocketController {
                 // Lógica para manejar la eliminación del nodo
                 messagingTemplate.convertAndSend("/topic/diagrams/" + sessionId, diagramUpdate);
                 break;
+            } case "deleteLink": {
+                Map<String, Object> deletedLinkData = (Map<String, Object>) diagramUpdate.get("linkData");
+                // Lógica para manejar la eliminación del enlace
+                // Aquí puedes agregar la lógica necesaria para eliminar el enlace de tu almacenamiento
+                messagingTemplate.convertAndSend("/topic/diagrams/" + sessionId, diagramUpdate);
+                break;
             }
             default:
                 // Manejar otros tipos de actualizaciones si es necesario

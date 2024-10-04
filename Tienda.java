@@ -1,5 +1,6 @@
 import javax.persistence.*;
 import lombok.*;
+import java.util.Set;
 
 @Data
 @ToString
@@ -21,6 +22,12 @@ public class Tienda {
 
     @Column(name = "ciudad", nullable = false)
     private String ciudad;
+
+    @ManyToMany
+    @JoinTable(name = "tienda_moiso gei",
+        joinColumns = @JoinColumn(name = "tienda_id"),
+        inverseJoinColumns = @JoinColumn(name = "moiso gei_id"))
+    private Set<Moiso gei> moiso gei;
 
     public Tienda(String nombre, String direccion, String ciudad) {
         super();

@@ -106,36 +106,42 @@ public class DiagramService {
             if (innerData.containsKey("nodeDataArray") && innerData.get("nodeDataArray") != null) {
                 List<Map<String, Object>> nodeDataArray = (List<Map<String, Object>>) innerData.get("nodeDataArray");
 
+                // Asegurarse de que linkDataArray exista y no sea null
+                List<Map<String, Object>> linkDataArray = innerData.containsKey("linkDataArray") ? (List<Map<String, Object>>) innerData.get("linkDataArray") : new ArrayList<>();
+
+                // Crear un mapeo entre las claves (keys) y los nombres de las clases
+                Map<Integer, String> classMapping = new HashMap<>();
+                for (Map<String, Object> nodeData : nodeDataArray) {
+                    classMapping.put((Integer) nodeData.get("key"), (String) nodeData.get("name"));
+                }
+
+                // Generar clases para cada nodo en nodeDataArray
                 for (Map<String, Object> nodeData : nodeDataArray) {
                     String className = (String) nodeData.get("name"); // Nombre de la clase
+                    List<Map<String, String>> attributes = (List<Map<String, String>>) nodeData.get("attributes");
 
-                    // Asegurarse de que "attributes" sea una lista de mapas
-                    if (nodeData.containsKey("attributes") && nodeData.get("attributes") instanceof List) {
-                        List<Map<String, Object>> rawAttributes = (List<Map<String, Object>>) nodeData.get("attributes");
-                        List<Map<String, String>> attributes = new ArrayList<>();
+                    // Extraer las relaciones relevantes para esta clase
+                    List<Map<String, Object>> relationships = new ArrayList<>();
+                    for (Map<String, Object> linkData : linkDataArray) {
+                        Integer fromKey = (Integer) linkData.get("from");
+                        Integer toKey = (Integer) linkData.get("to");
 
-                        // Convertir cada atributo al formato de Map<String, String>
-                        for (Map<String, Object> rawAttribute : rawAttributes) {
-                            Map<String, String> attribute = new HashMap<>();
-                            attribute.put("name", rawAttribute.get("name").toString());
-                            attribute.put("type", rawAttribute.get("type").toString());
-
-                            attributes.add(attribute);
+                        // Verificar si la relación involucra esta clase (como "from" o "to")
+                        if (fromKey.equals(nodeData.get("key")) || toKey.equals(nodeData.get("key"))) {
+                            relationships.add(linkData);
                         }
-
-                        // Generar el contenido de la clase Java con anotaciones
-                        String classContent = generateClassContent(className, attributes);
-
-                        // Escribir el archivo .java
-                        File javaFile = new File(className + ".java");
-                        try (FileWriter writer = new FileWriter(javaFile)) {
-                            writer.write(classContent);
-                        }
-
-                        javaFiles.add(javaFile);
-                    } else {
-                        throw new IllegalArgumentException("El nodo no contiene 'attributes' o no es una lista.");
                     }
+
+                    // Generar el contenido de la clase Java con anotaciones
+                    String classContent = generateClassContent(className, attributes, relationships, classMapping);
+
+                    // Escribir el archivo .java
+                    File javaFile = new File(className + ".java");
+                    try (FileWriter writer = new FileWriter(javaFile)) {
+                        writer.write(classContent);
+                    }
+
+                    javaFiles.add(javaFile);
                 }
             } else {
                 throw new IllegalArgumentException("El JSON no contiene nodeDataArray o es null.");
@@ -148,12 +154,13 @@ public class DiagramService {
     }
 
 
-    private String generateClassContent(String className, List<Map<String, String>> attributes) {
+    private String generateClassContent(String className, List<Map<String, String>> attributes, List<Map<String, Object>> relationships, Map<Integer, String> classMapping) {
         StringBuilder classContent = new StringBuilder();
 
         // Agregar las anotaciones principales
         classContent.append("import javax.persistence.*;\n")
-                .append("import lombok.*;\n\n")
+                .append("import lombok.*;\n")
+                .append("import java.util.Set;\n\n")
                 .append("@Data\n")
                 .append("@ToString\n")
                 .append("@EqualsAndHashCode\n")
@@ -176,6 +183,36 @@ public class DiagramService {
                 // Para otros atributos, agregar la anotación @Column
                 classContent.append("    @Column(name = \"").append(attrName).append("\", nullable = false)\n")
                         .append("    private ").append(mapToJavaType(attrType)).append(" ").append(attrName).append(";\n\n");
+            }
+        }
+
+        // Añadir relaciones
+        for (Map<String, Object> relationship : relationships) {
+            String relationshipType = (String) relationship.get("relationship");
+            Integer from = (Integer) relationship.get("from");
+            Integer to = (Integer) relationship.get("to");
+
+            // Verificar si la clase actual está involucrada en la relación
+            if (classMapping.get(from).equals(className)) {
+                String relatedClass = classMapping.get(to);
+                switch (relationshipType) {
+                    case "OneToMany":
+                        classContent.append("    @OneToMany(mappedBy = \"").append(className.toLowerCase()).append("\")\n")
+                                .append("    private Set<").append(relatedClass).append("> ").append(relatedClass.toLowerCase()).append(";\n\n");
+                        break;
+                    case "ManyToOne":
+                        classContent.append("    @ManyToOne\n")
+                                .append("    @JoinColumn(name = \"").append(className.toLowerCase()).append("_id\")\n")
+                                .append("    private ").append(relatedClass).append(" ").append(relatedClass.toLowerCase()).append(";\n\n");
+                        break;
+                    case "ManyToMany":
+                        classContent.append("    @ManyToMany\n")
+                                .append("    @JoinTable(name = \"").append(className.toLowerCase()).append("_").append(relatedClass.toLowerCase()).append("\",\n")
+                                .append("        joinColumns = @JoinColumn(name = \"").append(className.toLowerCase()).append("_id\"),\n")
+                                .append("        inverseJoinColumns = @JoinColumn(name = \"").append(relatedClass.toLowerCase()).append("_id\"))\n")
+                                .append("    private Set<").append(relatedClass).append("> ").append(relatedClass.toLowerCase()).append(";\n\n");
+                        break;
+                }
             }
         }
 
@@ -204,7 +241,6 @@ public class DiagramService {
 
         return classContent.toString();
     }
-
 
 
     private String mapToJavaType(String type) {
