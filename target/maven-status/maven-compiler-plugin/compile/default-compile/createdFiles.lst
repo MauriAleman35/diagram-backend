@@ -22,6 +22,7 @@ com\DiagramParcialBackend\Entity\UserSession.class
 com\DiagramParcialBackend\Controllers\LockController.class
 com\DiagramParcialBackend\errors\excepciones\NotFoundException.class
 com\DiagramParcialBackend\ServletInitializer.class
+com\DiagramParcialBackend\Controllers\testController.class
 com\DiagramParcialBackend\Controllers\UserSessionController.class
 com\DiagramParcialBackend\Entity\Diagram.class
 com\DiagramParcialBackend\Services\LockService.class
