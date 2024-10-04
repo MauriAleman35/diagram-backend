@@ -1,5 +1,5 @@
 # Usa una imagen base de OpenJDK para Java 19
-FROM openjdk:19-jdk-alpine
+FROM amazoncorretto:17
 
 # Establecer el directorio de trabajo en el contenedor
 WORKDIR /app
