@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: diagram:latest
+    container_name: spring-boot-app
+    ports:
+      - "3000:3000"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ep-orange-mouse-a2bixatf.eu-central-1.pg.koyeb.app:5432/koyebdb
+      SPRING_DATASOURCE_USERNAME: koyeb-adm
+      SPRING_DATASOURCE_PASSWORD: UzFmLReS96cG
+      SPRING_JPA_SHOW_SQL: true
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
