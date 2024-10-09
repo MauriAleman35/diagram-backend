@@ -49,7 +49,7 @@ public class WebSecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true); // Permitir credenciales si las usas
-        config.addAllowedOriginPattern("https://*.vercel.app"); // Permitir cualquier origen
+        config.addAllowedOriginPattern("*"); // Permitir cualquier origen
         config.addAllowedHeader("*"); // Permitir todos los encabezados
         config.addAllowedMethod("*"); // Permitir todos los métodos
         source.registerCorsConfiguration("/**", config);
