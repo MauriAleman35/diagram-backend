@@ -12,7 +12,7 @@ public class CorsConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("https://diagram-frontend-1er-parcial.vercel.app") // Origen específico
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Métodos permitidos
-                .allowedHeaders("*") // Todos los encabezados permitidos
-                .allowCredentials(true); // Si usas credenciales
+                .allowedHeaders("*"); // Todos los encabezados permitidos
+                // Si usas credenciales
     }
 }
