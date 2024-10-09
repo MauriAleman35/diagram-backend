@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = "https://diagram-frontend-1er-parcial.vercel.app")
+
 public class UserController {
     @Autowired
     UserRepository userRepository;
