@@ -15,8 +15,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
-
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
@@ -49,21 +47,20 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Permitir patrones de origen
-        configuration.setAllowedOriginPatterns(List.of("https://diagram-frontend-1er-parcial.vercel.app"));
+        // Especificar los orígenes con sus puertos
 
-        // Permitir métodos HTTP necesarios
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.addAllowedOrigin("https://diagram-frontend-1er-parcial.vercel.app"); // Backend, si haces peticiones desde ahí
 
-        // Permitir encabezados necesarios
-        configuration.setAllowedHeaders(List.of("*")); // Puedes especificar los encabezados que necesites
+        // Permitir todos los métodos HTTP
+        configuration.addAllowedMethod("*");
 
-        // Permitir credenciales
+        // Permitir todos los encabezados
+        configuration.addAllowedHeader("*");
+
+        // Permitir credenciales (para tokens o cookies, si es necesario)
         configuration.setAllowCredentials(true);
 
-        // (Opcional) Exponer encabezados
-        // configuration.setExposedHeaders(List.of("Authorization", "Content-Type"));
-
+        // Registrar esta configuración
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
