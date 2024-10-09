@@ -49,7 +49,7 @@ public class WebSecurityConfig {
 
         // Especificar los orígenes con sus puertos
 
-        configuration.addAllowedOrigin("https://diagram-frontend-1er-parcial.vercel.app"); // Backend, si haces peticiones desde ahí
+        configuration.addAllowedOriginPattern("https://*.vercel.app"); // Backend, si haces peticiones desde ahí
 
         // Permitir todos los métodos HTTP
         configuration.addAllowedMethod("*");
