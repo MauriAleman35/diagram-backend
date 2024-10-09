@@ -21,7 +21,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // Registramos el endpoint de WebSocket
         registry.addEndpoint("/ws-diagram") // Este será el punto de conexión del WebSocket
-                .setAllowedOrigins("http://localhost:5173") // Permitir conexiones desde el frontend
+                .setAllowedOrigins("https://diagram-frontend-1er-parcial.vercel.app/") // Permitir conexiones desde el frontend
                 .withSockJS(); // Soporte para SockJS en caso de que WebSocket no esté disponible
     }
 }
