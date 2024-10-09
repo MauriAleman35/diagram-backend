@@ -38,8 +38,8 @@ public class WebSecurityConfig {
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Sin estado
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class) // Filtro JWT
-                .cors(Customizer.withDefaults()); // Nueva forma de habilitar CORS
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);// Filtro JWT
+              // Nueva forma de habilitar CORS
 
         return http.build();
     }

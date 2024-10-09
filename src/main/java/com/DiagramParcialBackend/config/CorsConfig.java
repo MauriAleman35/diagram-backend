@@ -13,7 +13,7 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedOrigins("https://diagram-frontend-1er-parcial.vercel.app") // Permitir Koyeb
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
-                .allowCredentials(true); // Permitir credenciales si es necesario
+                .allowCredentials(false); // Permitir credenciales si es necesario
     }
 
 }
