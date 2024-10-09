@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,22 +24,22 @@ public class WebSecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     private final JwtRequestFilter jwtRequestFilter;
 
-    @Bean
 
+    @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-
                 .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/auth/**", "/registro**", "/js/**", "/css/**", "/img/**", "/user/**","/test/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permitir OPTIONS para preflight
+                        .requestMatchers("/auth/**", "/registro/**", "/js/**", "/css/**", "/img/**", "/user/**", "/test/**").permitAll()
                         .requestMatchers("/ws-diagram/**").permitAll()  // Permitir WebSocket sin autenticación
                         .requestMatchers("/session/**", "/user-session/**", "/diagram/**").authenticated()
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Sin estado
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class) // Filtro JWT
+                .cors(Customizer.withDefaults()); // Nueva forma de habilitar CORS
 
         return http.build();
     }
