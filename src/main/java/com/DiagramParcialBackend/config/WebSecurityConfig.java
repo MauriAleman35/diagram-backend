@@ -27,7 +27,7 @@ public class WebSecurityConfig {
 
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // Habilitar CORS
+
                 .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
@@ -43,26 +43,5 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
 
-        // Especificar los orígenes con sus puertos
-
-        configuration.addAllowedOriginPattern("https://diagram-frontend-1er-parcial.vercel.app"); // Backend, si haces peticiones desde ahí
-
-        // Permitir todos los métodos HTTP
-        configuration.addAllowedMethod("*");
-
-        // Permitir todos los encabezados
-        configuration.addAllowedHeader("*");
-
-        // Permitir credenciales (para tokens o cookies, si es necesario)
-        configuration.setAllowCredentials(true);
-
-        // Registrar esta configuración
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
 }
