@@ -48,7 +48,7 @@ public class WebSecurityConfig {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(false); // Permitir credenciales si las usas
+        config.setAllowCredentials(true); // Permitir credenciales si las usas
         config.addAllowedOriginPattern("*"); // Permitir cualquier origen
         config.addAllowedHeader("*"); // Permitir todos los encabezados
         config.addAllowedMethod("*"); // Permitir todos los métodos
