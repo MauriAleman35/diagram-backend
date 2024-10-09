@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "auth")
-@CrossOrigin(origins = "https://diagram-frontend-1er-parcial.vercel.app", allowCredentials = "true")
+@CrossOrigin(origins = "https://diagram-frontend-1er-parcial.vercel.app")
 public class AuthController {
     @Autowired
     AuthService authService;
