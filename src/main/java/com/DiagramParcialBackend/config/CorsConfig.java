@@ -12,8 +12,8 @@ public class CorsConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("*") // Permitir Koyeb
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(false); // Permitir credenciales si es necesario
+                .allowedHeaders("*");
+              // Permitir credenciales si es necesario
     }
 
 }
