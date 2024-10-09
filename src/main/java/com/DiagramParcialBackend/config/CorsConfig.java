@@ -10,7 +10,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://diagram-frontend-1er-parcial.vercel.app/") // Permitir Koyeb
+                .allowedOrigins("https://diagram-frontend-1er-parcial.vercel.app") // Permitir Koyeb
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true); // Permitir credenciales si es necesario
