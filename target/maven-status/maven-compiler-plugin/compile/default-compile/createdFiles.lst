@@ -1,6 +1,7 @@
 com\DiagramParcialBackend\Controllers\DiagramWebSocketController.class
 com\DiagramParcialBackend\Security\SecurityUserService.class
 com\DiagramParcialBackend\Services\SessionService.class
+Tienda.class
 com\DiagramParcialBackend\config\WebSocketConfig.class
 com\DiagramParcialBackend\DiagramParcialBackendApplication.class
 com\DiagramParcialBackend\Response\ApiResponse.class

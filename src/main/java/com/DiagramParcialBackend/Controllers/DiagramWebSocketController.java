@@ -46,14 +46,21 @@ public class DiagramWebSocketController {
                 break;
             case "deleteNode": {
                 Map<String, Object> deletedNodeData = (Map<String, Object>) diagramUpdate.get("nodeData");
-                // Lógica para manejar la eliminación del nodo
-                messagingTemplate.convertAndSend("/topic/diagrams/" + sessionId, diagramUpdate);
+                if (deletedNodeData != null) {
+                    // Lógica para manejar la eliminación del nodo
+                    messagingTemplate.convertAndSend("/topic/diagrams/" + sessionId, diagramUpdate);
+                } else {
+                    System.err.println("No se encontró nodeData para eliminar.");
+                }
                 break;
             } case "deleteLink": {
                 Map<String, Object> deletedLinkData = (Map<String, Object>) diagramUpdate.get("linkData");
-                // Lógica para manejar la eliminación del enlace
-                // Aquí puedes agregar la lógica necesaria para eliminar el enlace de tu almacenamiento
-                messagingTemplate.convertAndSend("/topic/diagrams/" + sessionId, diagramUpdate);
+                if (deletedLinkData != null) {
+                    // Lógica para manejar la eliminación del enlace
+                    messagingTemplate.convertAndSend("/topic/diagrams/" + sessionId, diagramUpdate);
+                } else {
+                    System.err.println("No se encontró linkData para eliminar.");
+                }
                 break;
             }
             default:
