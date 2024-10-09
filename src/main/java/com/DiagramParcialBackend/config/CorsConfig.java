@@ -10,7 +10,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://diagram-frontend-1er-parcial.vercel.app") // Origen específico
+                .allowedOrigins("*") // Origen específico
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Métodos permitidos
                 .allowedHeaders("*"); // Todos los encabezados permitidos
                 // Si usas credenciales
