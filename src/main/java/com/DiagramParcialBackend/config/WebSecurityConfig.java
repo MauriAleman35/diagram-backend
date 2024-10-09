@@ -30,7 +30,11 @@ public class WebSecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // Habilitar CORS
                 .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/auth/**", "/registro**", "/js/**", "/css/**", "/img/**", "/user/**","/test/**").permitAll()
+                        .requestMatchers("/ws-diagram/**").permitAll()  // Permitir WebSocket sin autenticación
+                        .requestMatchers("/session/**", "/user-session/**", "/diagram/**").authenticated()
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
@@ -45,7 +49,7 @@ public class WebSecurityConfig {
 
         // Especificar los orígenes con sus puertos
 
-        configuration.addAllowedOrigin("https://diagram-frontend-1er-parcial.vercel.app"); // Backend, si haces peticiones desde ahí
+        configuration.addAllowedOrigin("*"); // Backend, si haces peticiones desde ahí
 
         // Permitir todos los métodos HTTP
         configuration.addAllowedMethod("*");
