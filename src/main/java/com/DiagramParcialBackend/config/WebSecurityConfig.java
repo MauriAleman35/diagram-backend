@@ -49,7 +49,7 @@ public class WebSecurityConfig {
 
         // Especificar los orígenes con sus puertos
 
-        configuration.addAllowedOrigin("*"); // Backend, si haces peticiones desde ahí
+        configuration.addAllowedOriginPattern("*"); // Backend, si haces peticiones desde ahí
 
         // Permitir todos los métodos HTTP
         configuration.addAllowedMethod("*");
