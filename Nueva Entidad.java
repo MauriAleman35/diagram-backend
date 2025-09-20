@@ -10,15 +10,8 @@ import java.util.Set;
 @Table(name = "Nueva Entidad", schema = "public")
 public class Nueva Entidad {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column(name = "name", nullable = false)
-    private Integer name;
-
-    public Nueva Entidad(Integer name) {
+    public Nueva Entidad() {
         super();
-        this.name = name;
+
     }
 }

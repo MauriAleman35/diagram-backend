@@ -45,6 +45,7 @@ public class Session {
 
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Diagram> diagrams;
+
     public Session(String name, String description){
         super();
         this.name=name;
