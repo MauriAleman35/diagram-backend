@@ -8,10 +8,12 @@ com\DiagramParcialBackend\Response\ApiResponse.class
 com\DiagramParcialBackend\Response\UserResponse.class
 com\DiagramParcialBackend\errors\excepciones\ForbiddenException.class
 com\DiagramParcialBackend\Dto\SessionDto.class
+com\DiagramParcialBackend\Services\DiagramService$Attr.class
 com\DiagramParcialBackend\errors\dto\ApiError.class
 com\DiagramParcialBackend\errors\excepciones\InternalServerErrorException.class
 com\DiagramParcialBackend\Services\UserService.class
 com\DiagramParcialBackend\Entity\Lock.class
+com\DiagramParcialBackend\Services\DiagramService$NodeInfo.class
 com\DiagramParcialBackend\errors\excepciones\ResourceNotFoundException.class
 com\DiagramParcialBackend\Utils\Role.class
 com\DiagramParcialBackend\config\ApplicationConfig.class
